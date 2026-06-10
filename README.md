@@ -19,6 +19,7 @@ election-simulator/
 │   ├── run_real.py          # 전남 단일 리포트 (캐노니컬 모델, P(4쌍))
 │   ├── analyze_provinces.py # 17개 시·도 분석 (캐노니컬 모델)
 │   ├── analyze_national.py  # ★ 전국 정식 분석 (광주전남 합본 + 셸 + 사이드밴드)
+│   ├── analyze_president.py # ★ 제21대 대선 반복 검증 (전국 한 블록) — 초과 미재현
 │   ├── bias_demo.py         # 플러그인 편향(노이즈 이중계산) 해석적 증명
 │   ├── diagnose.py          # 근접쌍 분포 진단 (모델 갭 추적)
 │   └── data_loader.py       # 선관위 엑셀 로더 (대안 경로)
