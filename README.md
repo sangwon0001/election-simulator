@@ -1,5 +1,8 @@
 # 쌍둥이 투표동 시뮬레이터
 
+[![DOI](https://zenodo.org/badge/1264874211.svg)](https://doi.org/10.5281/zenodo.20624234)
+논문: [국문](paper/twin_precincts_kr.md) · [English](paper/twin_precincts_en.md) · [PDF](paper/twin_precincts_en.pdf)
+
 제9회 전국동시지방선거(2026-06-03) 시·도지사선거에서, 서로 다른 **두 개표단위(읍면동×구분)**가
 A·B 두 후보 득표수가 **동시에 똑같은** '쌍둥이 투표동'이 발생할 확률을 추정한다.
 실제 중앙선관위 데이터를 크롤링해 경험적 관측과 몬테카를로 시뮬레이션을 비교한다.

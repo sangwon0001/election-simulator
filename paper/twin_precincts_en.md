@@ -2,7 +2,8 @@
 
 Sangwon Seo · sangwon0001@gmail.com
 
-*Draft v1 — June 10, 2026. Data & code: public repository `election-simulator` (fully reproducible).*
+*Draft v1 — June 10, 2026. Data & code: github.com/sangwon0001/election-simulator,
+archived at DOI [10.5281/zenodo.20624234](https://doi.org/10.5281/zenodo.20624234) (fully reproducible).*
 
 ---
 

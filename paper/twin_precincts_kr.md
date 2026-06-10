@@ -4,7 +4,8 @@
 
 서상원 (Sangwon Seo) · sangwon0001@gmail.com
 
-*초안 v1 — 2026-06-10. 데이터·코드: github 저장소 `election-simulator` (전체 재현 가능)*
+*초안 v1 — 2026-06-10. 데이터·코드: github.com/sangwon0001/election-simulator,
+아카이브 DOI [10.5281/zenodo.20624234](https://doi.org/10.5281/zenodo.20624234) (전체 재현 가능)*
 
 ---
 
