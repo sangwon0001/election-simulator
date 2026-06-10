@@ -49,7 +49,7 @@ ALL_CITIES = {
 DEFAULT_CITIES = {c: ALL_CITIES[c] for c in
     ["4100", "5200", "4300", "4400", "5300", "4600", "4700", "4800", "4900"]}
 
-OUT = Path("crawl")
+OUT = Path(__file__).resolve().parent.parent / "data" / "crawl_provinces"
 
 
 def to_int(s: str):

@@ -17,6 +17,9 @@ from collections import Counter
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
+
+DATA = Path(__file__).resolve().parent.parent / "data"
 
 SKIP = {"합계", "거소투표", "관외사전투표", "잘못투입·구분된투표지",
         "잘못투입·구분된 투표지", "거소·선상투표", "관외사전"}
@@ -80,7 +83,7 @@ def sim_prob(units: pd.DataFrame, observed: int, R: int = 100_000) -> tuple[floa
 
 def main():
     rows = []
-    for path in sorted(glob.glob("crawl/*.json")):
+    for path in sorted(glob.glob(str(DATA/"crawl_provinces"/"*.json"))):
         city, df, iA, iB = load_units(path)
         split = df[df.gubun.isin(["관내사전투표", "선거일투표"])]
         dong = df[df.gubun == "계"]
@@ -99,7 +102,7 @@ def main():
               f"A {share_A:.0%} | 실제 동{obs_dong} 동구분{obs_split} | "
               f"시뮬기대 {exp:.2f} | P(≥관측) {p_obs:.1%}")
     out = pd.DataFrame(rows)
-    out.to_csv("provinces_summary.csv", index=False, encoding="utf-8-sig")
+    out.to_csv(DATA/"provinces_summary.csv", index=False, encoding="utf-8-sig")
     print("\n→ provinces_summary.csv 저장")
 
 

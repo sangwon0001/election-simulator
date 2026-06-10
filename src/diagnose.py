@@ -11,6 +11,9 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
+
+DATA = Path(__file__).resolve().parent.parent / "data"
 
 from twin_vote_sim import SimConfig, TwinVoteSimulator
 
@@ -37,7 +40,7 @@ def near_pairs(A, B, dists=(0, 1, 2, 3, 5, 10)):
 
 
 def main():
-    df = pd.read_csv("jeonnam_units.csv")
+    df = pd.read_csv(DATA/"jeonnam_units.csv")
     split = df[df.gubun.isin(["관내사전투표", "선거일투표"])].reset_index(drop=True)
 
     # ---- 실제 ----

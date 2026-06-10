@@ -107,5 +107,5 @@ if __name__ == "__main__":
     col = sys.argv[2] if len(sys.argv) > 2 else "선거인수"
     N = load_jeonnam_voters(sys.argv[1], voter_col=col)
     print(summarize(N))
-    np.save("jeonnam_voters.npy", N)
+    np.save(Path(__file__).resolve().parent.parent / "data" / "jeonnam_voters.npy", N)
     print("→ jeonnam_voters.npy 저장. 시뮬레이션에서 np.load 로 불러오세요.")

@@ -15,6 +15,9 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
+
+DATA = Path(__file__).resolve().parent.parent / "data"
 
 from twin_vote_sim import SimConfig, TwinVoteSimulator
 
@@ -45,7 +48,7 @@ def build_model(df: pd.DataFrame):
 
 
 def main(observed: int = 4) -> None:
-    df = pd.read_csv("jeonnam_units.csv")
+    df = pd.read_csv(DATA/"jeonnam_units.csv")
     split, N, tmean, sup, smap, tmap = build_model(df)
 
     cfg = SimConfig(
