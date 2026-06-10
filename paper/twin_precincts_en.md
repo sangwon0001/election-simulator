@@ -13,18 +13,18 @@ distinct (neighborhood × vote-type) units whose two leading candidates received
 identical vote counts — reignited public election-fraud controversies. Using the complete
 official returns (17 provinces, ~7,000 counting units), we measure how surprising this is.
 First, a multinomial–binomial generative model with per-unit observed parameters yields an
-expected 3.23 twins and P(≥9) = 0.64%. Second, we prove that such plug-in
+expected 3.23 twins and P($\geq 9$) = 0.64%. Second, we prove that such plug-in
 (parametric-bootstrap) procedures underestimate the collision probability of truly
-identical-parameter pairs by a factor of 1/√2 per matched dimension — a noise
+identical-parameter pairs by a factor of $1/\sqrt{2}$ per matched dimension — a noise
 double-counting bias — and propose as a complement a **model-free sideband estimator**, the
 bump-hunt analogue for exact ties, which extrapolates lattice-shell near-pair counts to
-distance zero. The sideband estimate, 3.47 ± 0.18 expected twins with P(≥9) = 0.94%
+distance zero. The sideband estimate, 3.47 ± 0.18 expected twins with P($\geq 9$) = 0.94%
 [0.49, 1.66], converges with the generative model, as does an unconditional
 distribution-based (ab-initio) simulation (~1%). Third, a pre-specified replication on the
 2025 presidential election shows no excess (7 observed vs. 6.02 expected, P = 39.7%), with
 near-pair density ratios and vote-type composition matching the model. Fourth, type
 decomposition localizes the local-election anomaly: all five Gwangju–Jeonnam twins fall in
-the early-voting pair type with the *smallest* expectation (conditional P ≈ 0.2%, post
+the early-voting pair type with the *smallest* expectation (conditional P $\approx$ 0.2%, post
 hoc), so the anomaly is confined to "local elections × Gwangju–Jeonnam × early voting ×
 exact ties." We conclude that (i) twins are a baseline natural phenomenon; (ii) the 2026
 excess is a ~1% tail event — too rare for "entirely natural," far too common for "evidence
@@ -63,7 +63,7 @@ predicted by a smooth stochastic model?** We make four contributions.
    assumptions of the public debate with measured quantities.
 2. **A methodological warning.** We prove that plug-in simulations which redraw counts
    around observed parameters systematically underestimate exact-tie probabilities, and
-   characterize when and by how much (1/√2 per dimension; Proposition 1).
+   characterize when and by how much ($1/\sqrt{2}$ per dimension; Proposition 1).
 3. **A model-free estimator.** We propose a sideband estimator of the expected number of
    exact ties — extrapolating lattice-shell counts of near pairs to distance zero — derive
    its unordered-pair normalization (Proposition 2), and validate it by simulation
@@ -108,8 +108,8 @@ of its early-voting and election-day registered counts.
 We use the official polling-station-level CSV from the public data portal (169,749 rows),
 aggregating election-day polling stations to the neighborhood level to match the unit
 definition above. The presidential election has identical candidates nationwide, so the
-whole country forms a single block: 3,554 neighborhoods → 7,108 counting units, with
-~2.5 × 10⁷ comparable pairs. (A, B) = (Lee Jae-myung, Kim Moon-soo).
+whole country forms a single block: 3,554 neighborhoods $\to$ 7,108 counting units, with
+~$2.5 \times 10^{7}$ comparable pairs. (A, B) = (Lee Jae-myung, Kim Moon-soo).
 
 ### 2.3 Observed twins
 
@@ -139,12 +139,12 @@ The presidential election produced seven twins (six day·day, one mixed, zero ea
 
 For all 18 counting units composing the twins of Table 1 we performed two checks
 (`src/verify_twins.py`). (i) **Internal arithmetic consistency**: early + election-day =
-total (for electorate, ballots, A, and B separately), and A + B ≤ ballots — all units
+total (for electorate, ballots, A, and B separately), and A + B $\leq$ ballots — all units
 pass. (ii) **Cross-validation across independent retrievals**: the nine Jeonnam units were
 collected twice, by the automated crawler and in a separate manual crawl session; the two
 retrievals agree exactly on every unit. The data therefore faithfully reflect the
 published official returns, and the observed twins are not artifacts of our collection or
-transcription. Errors *upstream* of official publication (counting floor → reporting
+transcription. Errors *upstream* of official publication (counting floor $\to$ reporting
 system) cannot be excluded by re-reading the published records; that is the domain of
 physical recounts (§7.2).
 
@@ -163,9 +163,9 @@ $$A^t_i \sim \mathrm{Bin}(V^t_i, p^t_{A,i}), \quad B^t_i \sim \mathrm{Bin}\big(V
 and we count unordered pairs of units agreeing simultaneously in $(A, B)$. The only
 randomness is (i) who votes early / on election day / abstains (multinomial) and (ii) how
 ballots split (binomial); there are no free parameters. National distributions are obtained
-as sums over blocks simulated with independent seeds (R = 5×10⁴–2×10⁵ per block).
+as sums over blocks simulated with independent seeds (R = $5{\times}10^{4}$–$2{\times}10^{5}$ per block).
 
-Robustness variants — fixed vs. random turnout, sub-binomial dispersion φ < 1,
+Robustness variants — fixed vs. random turnout, sub-binomial dispersion $\varphi < 1$,
 population-draw parameters, finite-population corrections — do not change the results
 (§5.1 of the repository's research notes). We additionally run an **ab-initio variant**
 that deliberately severs all parameter correlations: only the number of neighborhoods is
@@ -193,11 +193,11 @@ re-drawn difference is centered on the observed difference $d$: $D' \mid d \appr
 \mathcal N(d, 2\sigma^2)$, and $d$ itself is distributed $\mathcal N(0, 2\sigma^2)$;
 marginally $D' \approx \mathcal N(0, 4\sigma^2)$ — the noise is convolved in twice. The
 ratio of densities at zero is $\sqrt{2\sigma^2 / 4\sigma^2} = 1/\sqrt 2$; coordinates
-multiply under independence. ∎
+multiply under independence. $\blacksquare$
 
 Numerical verification (exact binomial pmf inner products; V = 2,000, 50 identical pairs
 plus 100 heterogeneous units, 200 observation replicates): ratio 0.707 for identical pairs
-(theory 1/√2), 0.985 (≈1) for heterogeneous pairs. Conversely, when the distribution of
+(theory $1/\sqrt{2}$), 0.985 ($\approx 1$) for heterogeneous pairs. Conversely, when the distribution of
 true parameter differences is locally flat at the noise scale the bias vanishes — its
 magnitude depends on unobservable structure (how many truly identical pairs exist) and is
 therefore uncorrectable within the model. This motivates the model-free estimator below.
@@ -217,7 +217,7 @@ extrapolation of $\rho(d)$ is itself the expected number of twins.**
 *Proof sketch.* Unordered pairs identify $\pm v$; each class with $v \ne 0$ absorbs two
 lattice sites, giving $4d$ classes per shell, while the origin class absorbs the two
 ordered self-reflections, giving expectation $c/2$. Synthetic uniform check: $n(0) = 87.8$
-vs. extrapolation 85.5 (theory 88.9). ∎
+vs. extrapolation 85.5 (theory 88.9). $\blacksquare$
 
 We fit a linear (and, as a check, quadratic) trend to $\rho(d)$, $d \in [1, 15]$, by
 Poisson maximum likelihood, extrapolate to $\rho(0)$, obtain standard errors by Poisson
@@ -240,7 +240,7 @@ an atom at exact equality.
 We pre-specify: *if the local-election excess reflects a structural mechanism of elections
 in general (model misspecification, reporting practice, demographic clustering), then the
 presidential election — whose expectation is larger — must show a proportionally larger
-absolute excess (6.0 × 2.8 ≈ 17 twins).* We also decompose expected twins by vote-type
+absolute excess ($6.0 \times 2.8 \approx 17$ twins).* We also decompose expected twins by vote-type
 pair {early·early, day·day, mixed} and compare with the observed composition. To first
 order the expected density of exact ties is independent of the noise scale and is
 determined by the lattice packing density of unit means, $\propto 1/(\text{spread}_A
@@ -253,15 +253,15 @@ for *where* twins should occur.
 
 **Table 2. Nationwide results (9 observed twins)**
 
-| Estimation route | Expected twins | P(≥9) |
+| Estimation route | Expected twins | P($\geq 9$) |
 |---|---|---|
 | Canonical generative model | 3.23 | 0.64% |
 | Sideband, linear extrapolation | 3.47 ± 0.18 | 0.94% [0.49, 1.66] |
 | Sideband, quadratic | 3.64 ± 0.36 | 1.26% [0.33, 3.39] |
 
 For the Gwangju–Jeonnam block alone (5 observed): canonical expectation 1.47 with
-P(≥5) = 1.74%; sideband 1.67 ± 0.12 with P(≥5) = 2.75%; ab-initio (unconditional,
-per-province/pooled fits) expectation 1.26/1.33 with P(≥5) = 0.99%/1.26%. **The
+P($\geq 5$) = 1.74%; sideband 1.67 ± 0.12 with P($\geq 5$) = 2.75%; ab-initio (unconditional,
+per-province/pooled fits) expectation 1.26/1.33 with P($\geq 5$) = 0.99%/1.26%. **The
 conditional, unconditional, and model-free routes all converge on the 1–3% band.**
 
 ### 4.2 Shell diagnostics: the excess is an atom at exact equality
@@ -328,7 +328,7 @@ The identical pipeline applied to the nationwide single block (7,108 units):
 
 **Table 5. Presidential election (7 observed twins)**
 
-| Estimation route | Expected | P(≥7) |
+| Estimation route | Expected | P($\geq 7$) |
 |---|---|---|
 | Canonical generative model | 6.02 | 39.7% |
 | Sideband, linear extrapolation | 6.44 ± 0.24 | 46.3% |
@@ -345,7 +345,7 @@ composition (model expectation: day·day 2.78, early·early 2.35, mixed 0.86; ob
 The pre-specified prediction — ~17 twins under a structural mechanism — is decisively
 rejected ($P(\ge 17 \mid 6.0) \approx 10^{-4}$).
 
-The reversal of type composition between the elections (early 6/9 → early 0/7) follows
+The reversal of type composition between the elections (early 6/9 $\to$ early 0/7) follows
 naturally from the packing-density principle: twins track not a particular vote type but
 *wherever counts bunch up small*. In Jeonnam's local race the landslide (B's share 8%)
 compressed the early-voting B-axis to 42–57 votes; in the presidential race the
@@ -379,10 +379,10 @@ code verification offered in response draws a single $p$ **shared by both units*
 ($X_1, X_2 \sim \mathrm{Bin}(n, p)$ with one Beta draw), thereby re-assuming $p_1 = p_2$;
 its agreement with the original number (0.901% vs. 0.906%) is circular. Implemented as
 intended — each unit drawing $p$ independently from its posterior — the variance triples
-and the tie probability becomes 0.524% (a √3 reduction). Either way the order of magnitude
+and the tie probability becomes 0.524% (a $\sqrt{3}$ reduction). Either way the order of magnitude
 stands, so "the conclusion is roughly unchanged" holds in the narrow sense for the
 conditional factor. But the tie probability is extremely sensitive to the *true*
-difference in support: 0.54% at Δp = 1 pp, 0.11% at 2 pp, 0.008% at 3 pp, ≈0 at 5 pp. The
+difference in support: 0.54% at Δp = 1 pp, 0.11% at 2 pp, 0.008% at 3 pp, $\approx 0$ at 5 pp. The
 effective definition of "similar" is thus "true support within ±1.5 pp *and* nearly equal
 size" — and the measured fraction of such pairs is 0.012%. The thread polished the
 approximately-correct conditional factor while leaving the 80×-wrong unconditional factor
@@ -426,7 +426,7 @@ the failure, of the statistical analysis.
 (1) The fundamental limitation of post-hoc analysis of a single election: the hypothesis
 (the twin statistic itself) originated from the data. The presidential replication
 mitigates this by pre-specification, but a cause unique to the local elections survives
-it. (2) Each neighborhood is observed once, so within-neighborhood dispersion (φ) is
+it. (2) Each neighborhood is observed once, so within-neighborhood dispersion ($\varphi$) is
 unidentifiable. (3) The type localization (§4.3) is post hoc and its significance is
 reported at face value, before exploration correction. (4) The integrity verification
 (§2.4) excludes collection and transcription artifacts on our side, but errors upstream of
