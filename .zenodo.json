@@ -1,0 +1,29 @@
+{
+  "title": "Twin Counting Units: A Model-Free Test for Exact-Tie Anomalies in Election Returns, with Evidence from Two Korean Elections",
+  "description": "Statistical analysis of 'twin' counting units (exact vote-count ties between distinct neighborhood-level units) in the 2026 Korean local elections and the 2025 presidential election. Includes a canonical multinomial-binomial generative model, a proof of the plug-in (parametric bootstrap) noise double-counting bias for exact ties, a model-free sideband (bump-hunt) estimator with lattice-shell normalization, a pre-specified cross-election replication test, full crawled data, analysis code, and the paper draft (Korean and English).",
+  "creators": [
+    {
+      "name": "Seo, Sangwon"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "election forensics",
+    "exact ties",
+    "birthday problem",
+    "parametric bootstrap",
+    "bump hunt",
+    "post-hoc selection",
+    "Korean elections",
+    "statistics"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/sangwon0001/election-simulator",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
