@@ -1,10 +1,10 @@
 """
-시·도별 쌍둥이 투표동 분석 — crawl/*.json 전부에 대해.
+시·도별 쌍둥이 투표동 분석 — crawl_provinces/*.json 전부에 대해.
 
 각 도마다:
   · 상위 2후보(A,B) 자동 식별 (총득표 기준)
   · 경험적 쌍둥이 쌍수: 동 단위(계) / 동×구분(관내사전+선거일)
-  · 시뮬 기대 쌍수 + P(관측) — 최종 캘리브 모델(conc=120, φ=0.3)
+  · 시뮬 기대 쌍수 + P(관측) — 캐노니컬 모델(twin_model: 동별 multinomial)
 
 출력: 표 + provinces_summary.csv
 """
@@ -14,10 +14,12 @@ from __future__ import annotations
 import glob
 import json
 from collections import Counter
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from pathlib import Path
+
+import twin_model
 
 DATA = Path(__file__).resolve().parent.parent / "data"
 
@@ -55,27 +57,12 @@ def empirical_twins(df: pd.DataFrame) -> int:
     return sum(v * (v - 1) // 2 for v in pairs.values() if v >= 2)
 
 
-def sim_prob(units: pd.DataFrame, observed: int, R: int = 100_000) -> tuple[float, float]:
-    """기본 이항분포 모델: 동별 실제 투표수 V·실제 지지율 p로 A,B 추출 → 쌍둥이 카운트."""
-    g = units[units.gubun.isin(["관내사전투표", "선거일투표"])]
-    if len(g) < 2:
+def sim_prob(df: pd.DataFrame, observed: int, R: int = 100_000) -> tuple[float, float]:
+    """캐노니컬 모델(twin_model): 동별 전체유권자→사전/본/기권 multinomial→득표."""
+    D = twin_model.build_dong_table(df)
+    if len(D) < 2:
         return float("nan"), float("nan")
-    V = g["votes"].to_numpy()
-    # 동별 실제 지지율 (유효표 기준 근사: A,B / 총투표). 음수/0 보호.
-    valid = np.clip(g["votes"].to_numpy(), 1, None)
-    pA = np.clip(g["A"].to_numpy() / valid, 0, 1)
-    pB = np.clip(g["B"].to_numpy() / valid, 0, 1)
-    BIG = int(V.max()) * 4 + 10
-    rng = np.random.default_rng(1)
-    cnt = np.zeros(R, dtype=int)
-    for r in range(R):
-        A = rng.binomial(V, pA)
-        rem = V - A
-        pBc = np.clip(pB / np.clip(1 - pA, 1e-9, 1), 0, 1)
-        B = rng.binomial(rem, pBc)
-        key = np.sort(A.astype(np.int64) * BIG + B)
-        _, c = np.unique(key, return_counts=True)
-        cnt[r] = int((c * (c - 1) // 2).sum())
+    cnt = twin_model.simulate(D, R=R, seed=7)
     exp = float(cnt.mean())
     p_obs = float((cnt >= observed).mean()) if observed > 0 else 1.0
     return exp, p_obs
@@ -89,7 +76,7 @@ def main():
         dong = df[df.gubun == "계"]
         obs_split = empirical_twins(split)
         obs_dong = empirical_twins(dong)
-        exp, p_obs = sim_prob(split, obs_split, R=50_000)
+        exp, p_obs = sim_prob(df, obs_split, R=100_000)
         # A 지지율(압승도)
         valid = df[df.gubun == "계"][["A", "B"]].sum()
         share_A = valid["A"] / df[df.gubun == "계"]["votes"].sum()
