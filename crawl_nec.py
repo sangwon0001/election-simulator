@@ -36,12 +36,18 @@ MENU_URL = ("https://info.nec.go.kr/main/showDocument.xhtml"
             "?electionId=0020260603&topMenuId=VC&secondMenuId=VCCP08")
 SEARCH_BTN = '.f_search input[type=image][alt="검색"]'
 
-# 비교용 기본 대상: 읍면동 구조를 갖는 9개 도(道)
-DEFAULT_CITIES = {
+# 전체 시·도 코드→이름
+ALL_CITIES = {
+    "1100": "서울특별시", "2600": "부산광역시", "2700": "대구광역시",
+    "2800": "인천광역시", "2900": "광주광역시", "3000": "대전광역시",
+    "3100": "울산광역시", "5100": "세종특별자치시",
     "4100": "경기도", "5200": "강원특별자치도", "4300": "충청북도",
     "4400": "충청남도", "5300": "전북특별자치도", "4600": "전라남도",
     "4700": "경상북도", "4800": "경상남도", "4900": "제주특별자치도",
 }
+# 비교용 기본 대상: 읍면동 구조를 갖는 9개 도(道)
+DEFAULT_CITIES = {c: ALL_CITIES[c] for c in
+    ["4100", "5200", "4300", "4400", "5300", "4600", "4700", "4800", "4900"]}
 
 OUT = Path("crawl")
 
@@ -145,7 +151,7 @@ def crawl_city(page, city_code: str, city_name: str) -> dict:
 
 def main():
     args = sys.argv[1:]
-    cities = {c: DEFAULT_CITIES.get(c, c) for c in args} if args else DEFAULT_CITIES
+    cities = {c: ALL_CITIES.get(c, c) for c in args} if args else DEFAULT_CITIES
     OUT.mkdir(exist_ok=True)
 
     with sync_playwright() as pw:
