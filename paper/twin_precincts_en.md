@@ -3,7 +3,7 @@
 Sangwon Seo · sangwon0001@gmail.com
 
 *Draft v1 — June 10, 2026. Data & code: github.com/sangwon0001/election-simulator,
-archived at DOI [10.5281/zenodo.20624234](https://doi.org/10.5281/zenodo.20624234) (fully reproducible).*
+archived at DOI [10.5281/zenodo.20624233](https://doi.org/10.5281/zenodo.20624233) (fully reproducible).*
 
 ---
 
@@ -23,7 +23,9 @@ distance zero. The sideband estimate, 3.47 ± 0.18 expected twins with P($\geq 9
 [0.49, 1.66], converges with the generative model, as does an unconditional
 distribution-based (ab-initio) simulation (~1%). Third, a pre-specified replication on the
 2025 presidential election shows no excess (7 observed vs. 6.02 expected, P = 39.7%), with
-near-pair density ratios and vote-type composition matching the model. Fourth, type
+near-pair density ratios and vote-type composition matching the model; a second
+replication on the preceding 2022 local elections likewise shows no excess (7 vs. 4.65,
+P = 19.0%) and no type concentration, rejecting mechanisms common to local elections. Fourth, type
 decomposition localizes the local-election anomaly: all five Gwangju–Jeonnam twins fall in
 the early-voting pair type with the *smallest* expectation (conditional P $\approx$ 0.2%, post
 hoc), so the anomaly is confined to "local elections × Gwangju–Jeonnam × early voting ×
@@ -71,8 +73,8 @@ predicted by a smooth stochastic model?** We make four contributions.
    self-consistency.
 4. **A replication design.** We pre-specify the prediction "if the excess is structural it
    must reappear, scaled up, in another election," and test it on the 2025 presidential
-   election, where it is rejected. This partially resolves the circularity inherent in
-   post-hoc analysis of a single election.
+   and 2022 local elections, where it is rejected in both. This partially resolves the
+   circularity inherent in post-hoc analysis of a single election.
 
 ### 1.3 Related work
 
@@ -323,7 +325,9 @@ Gwangju–Jeonnam × early voting × exact equality**. The popular benign accoun
 × small rural units, hence natural" — fails the type decomposition, since the same logic
 predicts a day·day majority.
 
-## 5. Results II: replication — the 2025 presidential election
+## 5. Results II: replication — the 2025 presidential and 2022 local elections
+
+### 5.1 The 21st presidential election (2025)
 
 The identical pipeline applied to the nationwide single block (7,108 units):
 
@@ -354,6 +358,38 @@ election-day units of rural Honam played that role. This refutes the popular not
 early-voting-specific anomaly with data — while reaffirming that the localization of §4.3
 (why the *least*-expected type?) cannot be explained by any property of elections in
 general.
+
+### 5.2 The 8th local elections (2022): rejecting the "local elections in general" hypothesis
+
+The remaining structural candidate is a cause common to local elections — reporting
+practice, tabulation pipeline, and the like. We applied the identical pipeline to the
+preceding local elections (June 1, 2022; official xlsx from the public data portal; 3,510
+neighborhoods × 17 provinces; no two provinces shared leading candidates in 2022, so no
+block merging is needed).
+
+**Table 6. Three elections compared**
+
+| Election | Observed | Canonical expected | P($\geq$ obs.) | Sideband | P($\geq$ obs.) |
+|---|---|---|---|---|---|
+| **2026 local** | **9** | 3.23 | **0.64%** | 3.47 ± 0.18 | **0.94%** |
+| 2025 presidential | 7 | 6.02 | 39.7% | 6.44 ± 0.24 | 46.3% |
+| 2022 local | 7 | 4.65 | 19.0% | 5.33 ± 0.21 | 28.7% |
+
+The seven twins of 2022 are unremarkable against an expectation of 4.65 (P = 19.0%); the
+type composition — 4 mixed, 2 early·early, 1 day·day — shows no concentration (matching
+the ~30% early·early share of near pairs); and the locations (3 South Jeolla, 2 North
+Jeolla, 1 South Gyeongsang, 1 North Chungcheong) show the same landslide × small-unit
+configuration operating in the same places, with the $d = 0$ atom simply absent. The
+ratio $r(d)$ runs at 1.03–1.18 for $d \ge 1$ — the model under-produces near pairs by
+roughly 8% here, which is why the sideband expectation exceeds the canonical one — with
+no effect on the conclusion.
+
+The anomaly is therefore confined to **the 2026 local elections alone**. The same
+statistic, computed by the same pipeline over three elections, reads 19%, 40%, and
+0.6–0.9%. Hypotheses of the form "a reporting or tabulation practice common to local
+elections" are rejected; what remains is a post-hoc-selected one-off coincidence (one of
+three elections landing at ~1% has probability ~3% — within coincidence range) or a cause
+specific to 2026.
 
 ## 6. Re-evaluating the public analysis
 
@@ -406,6 +442,10 @@ elections are a ~1% tail event relative to that base rate, a number stable acros
 entire methodological spectrum (conditional / unconditional / model-free). (iii) The
 excess is an atom at exact equality, localized four-fold.
 
+With both replications (2025 presidential, 2022 local) showing no excess, structural
+mechanisms of elections in general — and of local elections in particular — are rejected;
+the anomaly is confined to the single 2026 event.
+
 What may be inferred? A frequentist 1% is not a posterior probability of fraud. The fraud
 hypothesis does not particularly predict this pattern — exact ties of tens of votes in
 districts decided by 60-point margins — so the likelihood ratio is near 1, and with a low
@@ -425,23 +465,21 @@ the failure, of the statistical analysis.
 ### 7.2 Limitations
 
 (1) The fundamental limitation of post-hoc analysis of a single election: the hypothesis
-(the twin statistic itself) originated from the data. The presidential replication
-mitigates this by pre-specification, but a cause unique to the local elections survives
-it. (2) Each neighborhood is observed once, so within-neighborhood dispersion ($\varphi$) is
+(the twin statistic itself) originated from the data. The two replications mitigate this
+by pre-specification, but a cause unique to 2026 survives them. (2) Each neighborhood is observed once, so within-neighborhood dispersion ($\varphi$) is
 unidentifiable. (3) The type localization (§4.3) is post hoc and its significance is
 reported at face value, before exploration correction. (4) The integrity verification
 (§2.4) excludes collection and transcription artifacts on our side, but errors upstream of
 official publication cannot be checked by re-reading the publication — that is the domain
-of physical recounts. (5) A replication on the previous local elections (2022) remains
-undone; it would discriminate "local elections in general" from "2026 only" and would
-sharpen, though not redirect, our conclusions.
+of physical recounts. (5) The 2022 analysis (§5.2)
+was performed after the 2026 and 2025 results were known, though its hypothesis ("local
+elections in general?") and pipeline were specified beforehand.
 
 ### 7.3 Future work
 
-(a) The 2022 local elections under the identical pipeline; (b) extension to National
-Assembly elections (constituency level); (c) generalization of the sideband estimator —
-arbitrary-dimension multivariate exact ties, shell weighting under heterogeneous noise
-scales.
+(a) Extension to National Assembly elections (constituency level); (b) generalization of
+the sideband estimator — arbitrary-dimension multivariate exact ties, shell weighting
+under heterogeneous noise scales.
 
 ## 8. Conclusion
 
@@ -449,8 +487,8 @@ The nine twin counting units of the 2026 Korean local elections constitute a tai
 roughly 1% under any smooth stochastic model (nationwide 0.64–0.94%; Gwangju–Jeonnam
 1.0–2.8%). The figure is identical whether obtained from a generative model conditioned on
 observed parameters, an unconditional distributional model, or a sideband extrapolation
-using no generative assumptions at all; and the excess did not recur in the 2025
-presidential election. Exact ties are a natural phenomenon present in every election; the
+using no generative assumptions at all; and the excess recurred in neither the 2025
+presidential election (P = 40%) nor the 2022 local elections (P = 19%). Exact ties are a natural phenomenon present in every election; the
 2026 excess lies within the range of rare but possible coincidence; and the final identity
 of its residue belongs to verification outside statistics — source audits and physical
 recounts. The error shared by both camps of the public controversy was the same: not
@@ -496,7 +534,8 @@ info.nec.go.kr (accessed June 2026).
 
 All figures and numbers are reproduced by the public repository's scripts:
 `twin_model.py` (canonical model), `analyze_national.py` (local elections: national,
-shells, sideband), `analyze_president.py` (presidential), `bias_demo.py` (numerical
+shells, sideband), `analyze_president.py` (presidential), `analyze_local2022.py` (2022 local elections,
+§5.2), `bias_demo.py` (numerical
 verification of Proposition 1), `type_decompose.py` (type decomposition),
 `abinitio_sim.py` (unconditional variant), `verify_twins.py` (data integrity, §2.4),
 `paper/make_figs.py` (figures). Raw crawls and cleaned data are included.
