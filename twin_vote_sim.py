@@ -54,6 +54,11 @@ class SimConfig:
     #   무시하고 이 alpha를 그대로 사용(단위별 농도까지 직접 제어).
     alpha_per_unit: np.ndarray | None = None
 
+    # --- 단위 내 분산계수 φ (과/저분산) ---
+    #   1.0 = 이항분포(동전던지기 가정). <1 = sub-binomial(실제 투표는 동전보다
+    #   변동이 작음). φ를 주면 정규근사 추출(분산 = φ·V·p(1-p))을 사용.
+    dispersion: float = 1.0
+
     # --- 몬테카를로 ---
     n_iter: int = 100_000            # 반복 횟수
     chunk: int = 2_000               # 한 번에 처리할 반복 수 (메모리 제어)
@@ -166,16 +171,23 @@ class TwinVoteSimulator:
         pA = P[..., 0]                             # (batch, M)
         pB = P[..., 1]
 
-        # Pass 4: 다항분포의 이항분해 (완전 벡터화)
-        #   X_A ~ Binomial(V, pA)
-        #   X_B ~ Binomial(V - X_A, pB / (1 - pA))
-        X_A = rng.binomial(V, pA)
-        rem = V - X_A
-        denom = 1.0 - pA
-        # pA≈1 인 극단치 보호 (denom→0)
-        pB_cond = np.where(denom > 1e-12, pB / denom, 0.0)
-        pB_cond = np.clip(pB_cond, 0.0, 1.0)
-        X_B = rng.binomial(rem, pB_cond)
+        # Pass 4: 득표수 추출
+        phi = self.cfg.dispersion
+        if phi == 1.0:
+            # 이항분해 (정확): X_A~Bin(V,pA), X_B~Bin(V-X_A, pB/(1-pA))
+            X_A = rng.binomial(V, pA)
+            rem = V - X_A
+            denom = 1.0 - pA
+            pB_cond = np.clip(np.where(denom > 1e-12, pB / denom, 0.0), 0.0, 1.0)
+            X_B = rng.binomial(rem, pB_cond)
+        else:
+            # sub/over-binomial: 정규근사, 분산 = φ·V·p(1-p) (A, B 독립근사)
+            mA = V * pA
+            mB = V * pB
+            X_A = np.round(rng.normal(mA, np.sqrt(phi * V * pA * (1 - pA))))
+            X_B = np.round(rng.normal(mB, np.sqrt(phi * V * pB * (1 - pB))))
+            X_A = np.clip(X_A, 0, V).astype(np.int64)
+            X_B = np.clip(X_B, 0, V).astype(np.int64)
 
         # Pass 5: 쌍둥이 표 검증 (생일 문제)
         #   서로 다른 두 투표소 i, j 에서 (A_i==A_j) AND (B_i==B_j) 인 충돌 탐지.
@@ -205,6 +217,8 @@ class TwinVoteSimulator:
         hits = 0
         done = 0
         total_pairs = 0
+        MAXBIN = 64                                 # 쌍 개수 히스토그램 상한
+        pair_hist = np.zeros(MAXBIN + 1, dtype=np.int64)
 
         while done < total:
             batch = min(c.chunk, total - done)
@@ -212,6 +226,8 @@ class TwinVoteSimulator:
             chunk_any, chunk_pairs = self._simulate_chunk(batch)
             hits += int(chunk_any.sum())
             total_pairs += int(chunk_pairs.sum())
+            pair_hist += np.bincount(np.clip(chunk_pairs, 0, MAXBIN),
+                                     minlength=MAXBIN + 1)
             done += batch
             if verbose:
                 print(f"  진행 {done:>7,}/{total:,}  누적 적중 {hits:>6,}"
@@ -230,6 +246,7 @@ class TwinVoteSimulator:
             ci_low=max(0.0, center - half), ci_high=min(1.0, center + half),
             n_stations=int(self._N.size), total_voters=int(self._N.sum()),
             expected_pairs=total_pairs / total,
+            pair_hist=pair_hist,
         )
 
 
@@ -243,9 +260,27 @@ class SimResult:
     n_stations: int
     total_voters: int
     expected_pairs: float = 0.0       # 1회 선거당 기대 쌍둥이 쌍 개수
+    pair_hist: np.ndarray | None = None   # 쌍 개수별 빈도 (index=쌍수)
+
+    # ----- 쌍둥이 쌍 개수 확률 -----
+    def p_exactly(self, k: int) -> float:
+        """정확히 k쌍이 나올 확률."""
+        if self.pair_hist is None or k >= self.pair_hist.size:
+            return 0.0
+        return float(self.pair_hist[k] / self.pair_hist.sum())
+
+    def p_at_least(self, k: int) -> float:
+        """k쌍 이상 나올 확률."""
+        if self.pair_hist is None:
+            return 0.0
+        return float(self.pair_hist[k:].sum() / self.pair_hist.sum())
+
+    def pair_distribution(self, upto: int = 6) -> dict[int, float]:
+        tot = self.pair_hist.sum() if self.pair_hist is not None else 1
+        return {k: float(self.pair_hist[k] / tot) for k in range(upto + 1)}
 
     def __str__(self) -> str:
-        return (
+        s = (
             "\n=== 쌍둥이 표 시뮬레이션 결과 ===\n"
             f"투표소 수        : {self.n_stations:,}\n"
             f"총 유권자(상수)  : {self.total_voters:,}\n"
@@ -255,6 +290,11 @@ class SimResult:
             f"95% 신뢰구간     : [{self.ci_low:.4%}, {self.ci_high:.4%}]\n"
             f"기대 쌍둥이 쌍수 : {self.expected_pairs:.3f} 쌍/선거\n"
         )
+        if self.pair_hist is not None:
+            dist = self.pair_distribution(6)
+            s += "쌍 개수 분포     : " + \
+                 ", ".join(f"{k}쌍 {v:.1%}" for k, v in dist.items()) + "\n"
+        return s
 
 
 # ---------------------------------------------------------------------------
