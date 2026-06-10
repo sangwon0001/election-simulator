@@ -18,6 +18,8 @@ election-simulator/
 │   ├── build_dataset.py     # 전남 수동크롤 22개 → jeonnam_units.csv + 경험적 쌍둥이
 │   ├── run_real.py          # 전남 단일 리포트 (캐노니컬 모델, P(4쌍))
 │   ├── analyze_provinces.py # 17개 시·도 분석 (캐노니컬 모델)
+│   ├── analyze_national.py  # ★ 전국 정식 분석 (광주전남 합본 + 셸 + 사이드밴드)
+│   ├── bias_demo.py         # 플러그인 편향(노이즈 이중계산) 해석적 증명
 │   ├── diagnose.py          # 근접쌍 분포 진단 (모델 갭 추적)
 │   └── data_loader.py       # 선관위 엑셀 로더 (대안 경로)
 ├── data/
@@ -45,6 +47,9 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 # 3) 17개 시·도 분석
 .venv/bin/python src/analyze_provinces.py
+
+# 4) 전국 정식 분석 — 캐노니컬 P(≥9) + 근접쌍 셸 + 모형무관 사이드밴드
+.venv/bin/python src/analyze_national.py
 ```
 
 ## 방법론
@@ -91,7 +96,8 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 ## 진단으로 밝힌 모델의 한계
 
-근접쌍 분포(`diagnose.py`)를 보면 bulk(거리 d≥2)는 실제와 일치하나, **정확일치(d≤1)에서 실제가
-모델의 ~3배**. 분산을 키우거나(conc↓) 줄여도(φ) 이 정확-피크는 재현 불가 — 모델이 못 만드는
-**이산적 군집**(인구학적으로 닮은 사전투표 면들)이 실재함을 시사. 다만 그 효과 크기(~2쌍)는
-포아송 노이즈와 구분하기 어려워, 결국 **전남 4쌍은 구조가 아니라 상위 운**으로 결론.
+근접쌍 분포(`diagnose.py`, 전국 정식판은 `analyze_national.py`)를 보면 bulk(거리 d≥2)는
+실제와 일치하나, **정확일치(d=0)만 실제가 모델의 ~2.8배**. 전국 기준 관측 9쌍 vs 기대
+3.23(캐노니컬) / 3.47±0.18(모형무관 사이드밴드 외삽) → **P(≥9) = 0.64% / 0.94%**.
+초과는 근접이 아니라 정확일치에만 있는 원자(atom)라서 매끄러운 메커니즘으론 양쪽
+방향(자연 군집으로 설명 / 모델 비판으로 해소) 모두 못 만든다. 상세 논증은 `FINDINGS.md`.
